@@ -1,0 +1,4 @@
+> source('~/stat_zad2.R')
+[1] 8
+[1] "Jan"
+[1] "Kowalski"
