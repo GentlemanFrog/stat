@@ -16,5 +16,8 @@ df = iris %>% # load
   mutate(row = row_number()) %>% # identify values (just to be able to distinct)
   pivot_wider(names_from = Species, values_from = Sepal.Length) %>% # (rearrange)
   select(-row) # ignore ids
-boxplot(df)
+#boxplot(df)
+# albo lepiej
+boxplot(iris$Sepal.Length ~ iris$Species)
 dev.off()
+
