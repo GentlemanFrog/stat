@@ -112,6 +112,9 @@ shapiro.test(grass$D)
 shapiro.test(grass$A)
 shapiro.test(grass$J)
 shapiro.test(grass$N)
+#albo, bardziej elegancko
+shapiro_results = lapply(grass, function(x){shapiro.test(x)$p.value})
+all(shapiro_results > 0.05)
 
 ## próby sa zgodne z rozkładem normalnym i proby sa niezależne
 
