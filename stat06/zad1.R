@@ -2,6 +2,8 @@
 library(drc)
 library(flexmix)
 library(stats)
+library(ggplot2)
+library(dplyr)
 curves = read.csv("krzywe.csv", sep=",")
 curves.mm = drm(v ~ S, data=curves, fct=MM.2())
 
@@ -9,15 +11,24 @@ curves.mm = drm(v ~ S, data=curves, fct=MM.2())
 #mml <- data.frame(S = seq(0, max(curves$S), length.out = 100))
 #mml$v <- predict(curves.mm, newdata = mml)
 summary(curves.mm)
+#p = ggplot(curves, aes(S, v, color = v)) + geom_point()
+#p + geom_smooth(aes(S, predict(curves.mm)))
 plot(curves)
-plot(curves.mm, add = TRUE)
-#lines(curves$S, predict(curves.mm))
+#plot(curves.mm, add = TRUE)
+
+# TODO: DELETe
+#mselect(curves.mm, list(MM.3(), logistic(), l2()), icfct = AIC)
+
+### 
+
+lines(sort(curves$S), sort(predict(curves.mm)))
+
 
 curves.nls = nls(v ~ Vm * S / (K + S), data = curves, start = list(K=max(curves$v), Vm=max(curves$v)))
 summary(curves.nls)
 plot(curves)
 #sortownaie tutaj
-lines(curves$S, predict(curves.nls))
+lines(sort(curves$S), sort(predict(curves.nls)))
 
 #zad2
 woods = read.csv("Woods.csv", sep=",")
@@ -72,3 +83,15 @@ BIC(d1.weibull, d1.exd, d1.gompertz, d1.LL, d1.log)
 AIC(d2.weibull, d2.exd, d2.gompertz, d2.LL, d2.log)
 BIC(d2.weibull, d2.exd, d2.gompertz, d2.LL, d2.log)
 
+#zad4
+ryegrass
+ryegrass.LL = drm(rootl ~ conc, data = ryegrass, fct = LL.2())
+summary(ryegrass.LL)
+plot(ryegrass.LL)
+
+ryegrass.weibull = drm(rootl ~ conc, data = ryegrass, fct = weibull2())
+summary(ryegrass.weibull)
+plot(ryegrass.weibull)
+
+AIC(ryegrass.LL, ryegrass.weibull)
+BIC(ryegrass.LL, ryegrass.weibull)
