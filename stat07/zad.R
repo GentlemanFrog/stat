@@ -57,6 +57,8 @@ shapiro.test(P)
 
 bartlett.test(data2$KMP, data2$odmiany)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+bartlett.test(data2$KMP, data2$dawki)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
 
 # analiza wariancji ANOVA
 # uklad hipotez
@@ -75,12 +77,11 @@ plot(TukeyHSD(model))
 # zad3 
 #library(reshape2)
 library(tidyr)
+library(dplyr)
 library("xlsx")
 
 xdata = read.xlsx("zad3_2.xlsx", 1, header = T)
 colnames(xdata) = c("Siew", 0, 0, 40, 40, 80, 80, 120, 120)
-xdata %>%
-  group_by(colnames(xdata))
 xdata2 = pivot_longer(xdata, cols = 2:5, names_to = "nawozenia", values_to = "plony")
 xdata2
 
@@ -97,4 +98,45 @@ data3 <- data.frame(plon, odmiany, dawki)
 
 data3
 
+p1 = xdata2 %>%
+      filter(nawozenia == 0)
+shapiro.test(p1$plony)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+p2 = xdata2 %>%
+      filter(nawozenia == 40)
+shapiro.test(p2$plony)
+# pvalue ponizej 0.05, zatem jest podstawa do odrzucenia hipotezy zerowej i przyjecia alternatywnej, zatem uklad nie jest zgodny z rozkladem normalnym
+
+p3 = xdata2 %>%
+  filter(nawozenia == 80)
+shapiro.test(p3$plony)
+# pvalue ponizej 0.05, zatem jest podstawa do odrzucenia hipotezy zerowej i przyjecia alternatywnej, zatem uklad nie jest zgodny z rozkladem normalnym
+
+p4 = xdata2 %>%
+  filter(nawozenia == 120)
+shapiro.test(p4$plony)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+bartlett.test(xdata2$plony, xdata2$nawozenia)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+bartlett.test(xdata2$plony, xdata2$Siew)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+
+# analiza wariancji ANOVA
+# uklad hipotez
+# H0_nawozenie: nawożenie nie wpływa na średnie plony masy zielonej.
+# H1_nawozenie: ~H0_nawozenie
+# H0_siew: sposoby siewu nie wpływają na średnie plony masy zielonej
+# H1_siew: ~H0_siew
+# H0_NxS: interakcja nawożeń ze sposobami siewu jest nieistotna
+# H1_NxS: ~H0_NxS
+
 summary(aov(xdata2$plony ~ factor(xdata2$nawozenia)*factor(xdata2$Siew)))
+
+# pvalue mnniejsze od 0.05 w przypadku nawozen oraz siewu, zatem odrzucamy hipoteze zerowa i przyjmujemy alternatywna, zatem nawozenie i siew wplywaja istotnie statystyczniee na srednie plony masy zielonej
+# pvalue wieksze od 0.05 w przypadku interakcji, zatem przyjmujemy hipoteze zerowa, zatem inteerakcja nawozenia i siewu nie wplywa istotnie statystyczniee na srednie plony masy zielonej
+
+# zad4
+
+
