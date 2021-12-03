@@ -82,6 +82,7 @@ library("xlsx")
 
 xdata = read.xlsx("zad3_2.xlsx", 1, header = T)
 colnames(xdata) = c("Siew", 0, 0, 40, 40, 80, 80, 120, 120)
+xdata
 xdata2 = pivot_longer(xdata, cols = 2:5, names_to = "nawozenia", values_to = "plony")
 xdata2
 
@@ -138,5 +139,76 @@ summary(aov(xdata2$plony ~ factor(xdata2$nawozenia)*factor(xdata2$Siew)))
 # pvalue wieksze od 0.05 w przypadku interakcji, zatem przyjmujemy hipoteze zerowa, zatem inteerakcja nawozenia i siewu nie wplywa istotnie statystyczniee na srednie plony masy zielonej
 
 # zad4
+xdata = read.xlsx2("zad4.xlsx", 1, header = T)
+xdata
+colnames(xdata) = c("Bloki", 1, 2, 3, 4)
+xdata2 = xdata %>%
+  slice(1:5)
+xdata3 = pivot_longer(xdata2, cols = 2:5, names_to = "Typy", values_to = "plon")
+xdata3
 
+p1 = xdata3 %>%
+  filter(Typy == 1)
+shapiro.test(as.numeric(p1$plon))
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
 
+p2 = xdata3 %>%
+  filter(Typy == 2)
+shapiro.test(as.numeric(p2$plon))
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+p3 = xdata3 %>%
+  filter(Typy == 3)
+shapiro.test(as.numeric(p3$plon))
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+p4 = xdata3 %>%
+  filter(Typy == 4)
+shapiro.test(as.numeric(p4$plon))
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+bartlett.test(as.numeric(xdata2$plon), xdata2$Typy)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+bartlett.test(as.numeric(xdata2$plon), xdata2$Bloki)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+
+# analiza wariancji ANOVA
+#Układ hipotez:
+#H0: średnie plonow dla typów uprawy sa rowne
+#H1: ~H0
+
+model = aov(as.numeric(xdata3$plon) ~ factor(xdata3$Typy)+factor(xdata3$Bloki))
+summary(model)
+
+# pvalue mniejsze od 0.05 dla typu uprawy, zatem przyjmujemy hipoteze alternatywna ktora wskazuje na to, ze srednie plony nie sa rowne dla roznych typow uprawy
+
+TukeyHSD((model))
+plot(TukeyHSD(model))
+
+# pod wzgledem blokow - sa one wszystkie statystycznie znaczaco nierowne
+# pod wzgledem typow uprawy - 2-1 oraz 3-1 są statystycznie znaczaco rozne
+
+#zad5
+xdata = read.xlsx("zad5.xlsx", 1, header = T)
+xdata
+
+xdata2 = pivot_longer(xdata, cols = 2:6, names_to = "Terminy", values_to = "temp")
+xdata2
+
+xdata3 = xdata2 %>%
+  separate(temp, c("Herbicydy", "Plony"), sep = ": ")
+xdata3$Plony = as.numeric(sub(",", ".", xdata3$Plony))
+xdata3
+
+# analiza wariancji ANOVA
+#Układ hipotez:
+#H0_H:  średnie plony dla herbicydów (obiektów) są równe
+#H1_H: ~H0_H
+#H0_O: średnie plony dla odmian (wierszy) są równe
+#H1_O: ~H0_O
+#H0_T: średnie plony dla terminów siewów (kolumn) są równe
+#H1_T: ~H0_T
+
+summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+factor(xdata3$Terminy)))
+
+# pvalue wieksze od 0.05 w kazdym przypadku, zatem przyjmujemy hipoteze zerowa, zatem srednie ilosci plonow sie nie roznia pod wplywem zadnego czynniku
