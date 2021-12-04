@@ -1,3 +1,7 @@
+library(tidyr)
+library(dplyr)
+library("xlsx")
+
 # zad1
 plon1 = c(290, 286, 266, 270, 301, 270, 264, 277)
 plon2 = c(445, 450, 413, 448, 454, 442, 430, 438)
@@ -48,12 +52,41 @@ data2 <- data.frame(KMP, odmiany, dawki)
 
 data2
 
+# dla odmian
 shapiro.test(K)
 # pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
 shapiro.test(M)
 # pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
 shapiro.test(P)
 # pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
+# dla dawek nawozenia
+p1 = data2 %>%
+  filter(dawki == 1)
+p1
+shapiro.test(p1$KMP)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p2 = data2 %>%
+  filter(dawki == 2)
+p2
+shapiro.test(p2$KMP)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p3 = data2 %>%
+  filter(dawki == 3)
+p3
+shapiro.test(p3$KMP)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p4 = data2 %>%
+  filter(dawki == 4)
+p4
+shapiro.test(p4$KMP)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p5 = data2 %>%
+  filter(dawki == 5)
+p5
+shapiro.test(p5$KMP)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+
 
 bartlett.test(data2$KMP, data2$odmiany)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
@@ -118,6 +151,21 @@ p4 = xdata2 %>%
   filter(nawozenia == 120)
 shapiro.test(p4$plony)
 # pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p5 = xdata2 %>%
+  filter(Siew == "C")
+p5
+shapiro.test(p5$plony)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
+p6 = xdata2 %>%
+  filter(Siew == "M")
+p6
+shapiro.test(p6$plony)
+# pvalue mniejsze od 0.05, zatem jest podstawa do odrzucenia hipotezy zerowej, zatem uklad nie jest zgodny z rozkladem normalnym
+p7 = xdata2 %>%
+  filter(Siew == "P")
+p7
+shapiro.test(p7$plony)
+# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym
 
 bartlett.test(xdata2$plony, xdata2$nawozenia)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
@@ -169,8 +217,13 @@ shapiro.test(as.numeric(p4$plon))
 
 bartlett.test(as.numeric(xdata2$plon), xdata2$Typy)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+
+########
+# w teorii mamy sprawdzac tylko obiekty czyli typy uprawy, zatem bartlett plonów z blokami teoretycznie nie jest potrzebny 
 bartlett.test(as.numeric(xdata2$plon), xdata2$Bloki)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+########
+
 
 # analiza wariancji ANOVA
 #Układ hipotez:
@@ -199,6 +252,41 @@ xdata3 = xdata2 %>%
   separate(temp, c("Herbicydy", "Plony"), sep = ": ")
 xdata3$Plony = as.numeric(sub(",", ".", xdata3$Plony))
 xdata3
+
+map = hash()
+map$Odmiany = unique(xdata3$Odmiany)
+map$Terminy = unique(xdata3$Terminy)
+map$Herbicydy = unique(xdata3$Herbicydy)
+filters = c(unique(xdata3$Odmiany), unique(xdata3$Terminy), unique(xdata3$Herbicydy))
+filters
+
+for (col in colnames(xdata3)[1:3])
+{
+  print(col)
+  for (item in map[[col]])
+  {
+    print(item)
+    d = xdata3 %>% filter(xdata3[col] == item)
+    shap = shapiro.test(d$Plony)
+    print(shap)
+    if(shap$p.value < 0.05)
+    {
+      print("# pvalue mnniejsze od 0.05, zatem jest podstawa do odrzucenia hipotezy zerowej, zatem uklad nie jest zgodny z rozkladem normalnym")
+    }
+    else
+    {
+      print("# pvalue powyzej 0.05, zatem nie ma podstaw do odrzucenia hipotezy zerowej, zatem uklad jest zgodny z rozkladem normalnym")
+    }
+  }
+}
+
+bartlett.test(xdata3$Plony, xdata3$Herbicydy)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+bartlett.test(xdata3$Plony, xdata3$Odmiany)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+bartlett.test(xdata3$Plony, xdata3$Terminy)
+# ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
+
 
 # analiza wariancji ANOVA
 #Układ hipotez:
