@@ -257,8 +257,6 @@ map = hash()
 map$Odmiany = unique(xdata3$Odmiany)
 map$Terminy = unique(xdata3$Terminy)
 map$Herbicydy = unique(xdata3$Herbicydy)
-filters = c(unique(xdata3$Odmiany), unique(xdata3$Terminy), unique(xdata3$Herbicydy))
-filters
 
 for (col in colnames(xdata3)[1:3])
 {
