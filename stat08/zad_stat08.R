@@ -1,6 +1,7 @@
 library(tidyr)
 library(dplyr)
 library("xlsx")
+setwd("~/stat/stat08")
 #zad1
 data = c(-10:10)
 data
