@@ -9,6 +9,7 @@ curve(exp(x)/(1+exp(x)), -10, 10)
 
 #zad2
 xdata = read.xlsx("nadcisnienie.xlsx", 1, header = T)
+xdata
 rl = glm(xdata$nadcisnienie ~ xdata$wiek + xdata$palenie, family = "binomial")
 summary(rl)
 # 
@@ -23,6 +24,7 @@ model.gauss = glm(mtcars$mpg ~ mtcars$disp + mtcars$hp, family = "gaussian")
 summary(model.gauss)
 # oba modele daja te same dopasowania, zatem dla disp jest obecny istotny wplyw na mpg, a dla hp nie istnieje istotny wplyw (pvalue powyzej 0.05)
 
+#B
 model.logit = glm(mtcars$am ~ mtcars$disp + mtcars$hp, family = "binomial")
 summary(model.logit)
 model.poiss = glm(mtcars$am ~ mtcars$disp + mtcars$hp, family = "poisson")
@@ -62,7 +64,7 @@ data = data.frame("ck" = c(20, 60, 100, 140, 180, 220, 260, 300, 340, 380, 420, 
                   "ha" = c(2,13,30,30,21,19,18,13,19,15,7,8),
                   "ok" = c(88,26,8,5,0,1,1,1,1,0,0,0))
 #A
-plot(data$ck, data$ha/(data$ha + data$ok), ylab = "Prob o heart attack")
+plot(data$ck, data$ha/(data$ha + data$ok), ylab = "Prob of heart attack")
 #B                                                                                                                                                                                                               
 model.logit = glm(cbind(data$ha, data$ok) ~ data$ck, family = "binomial")
 #C

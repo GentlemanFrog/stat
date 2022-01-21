@@ -1,4 +1,5 @@
 #zad1
+setwd("~/stat/stat06")
 library(drc)
 library(flexmix)
 library(stats)
@@ -32,7 +33,9 @@ lines(sort(curves$S), sort(predict(curves.nls)))
 
 #zad2
 woods = read.csv("Woods.csv", sep=",")
+woods
 woods2 = data.frame(woods$Plon, woods$Tydzien)
+woods2
 colnames(woods2) = c("plon", "Tydzien")
 woods.nls = nls(plon ~ a * Tydzien^b * exp(-c*Tydzien), data=woods2, start = list(a=1,b=1,c=0.01))
 plot(woods2$Tydzien, woods2$plon)
@@ -41,6 +44,8 @@ lines(woods2$Tydzien, predict(woods.nls))
 #zad3
 d1 = read.csv("dataset1.csv", sep = ",")
 d2 = read.csv("dataset2.csv", sep=",")
+d1
+d2
 
 d1.weibull = drm(response ~ time, data=d1, fct = weibull2())
 d2.weibull = drm(response ~ time, data=d2, fct = weibull2())

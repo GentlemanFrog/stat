@@ -1,3 +1,4 @@
+setwd("~/stat/stat07")
 library(tidyr)
 library(dplyr)
 library("xlsx")
@@ -114,6 +115,7 @@ library(dplyr)
 library("xlsx")
 
 xdata = read.xlsx("zad3_2.xlsx", 1, header = T)
+xdata
 colnames(xdata) = c("Siew", 0, 0, 40, 40, 80, 80, 120, 120)
 xdata
 xdata2 = pivot_longer(xdata, cols = 2:5, names_to = "nawozenia", values_to = "plony")
@@ -181,10 +183,15 @@ bartlett.test(xdata2$plony, xdata2$Siew)
 # H0_NxS: interakcja nawożeń ze sposobami siewu jest nieistotna
 # H1_NxS: ~H0_NxS
 
-summary(aov(xdata2$plony ~ factor(xdata2$nawozenia)*factor(xdata2$Siew)))
-
+model = aov(xdata2$plony ~ factor(xdata2$nawozenia)*factor(xdata2$Siew))
+summary(model)
 # pvalue mnniejsze od 0.05 w przypadku nawozen oraz siewu, zatem odrzucamy hipoteze zerowa i przyjmujemy alternatywna, zatem nawozenie i siew wplywaja istotnie statystyczniee na srednie plony masy zielonej
 # pvalue wieksze od 0.05 w przypadku interakcji, zatem przyjmujemy hipoteze zerowa, zatem inteerakcja nawozenia i siewu nie wplywa istotnie statystyczniee na srednie plony masy zielonej
+
+t = TukeyHSD(model)
+t$`factor(xdata2$nawozenia)`
+t$`factor(xdata2$Siew)`
+t$`factor(xdata2$nawozenia):factor(xdata2$Siew)`
 
 # zad4
 xdata = read.xlsx2("zad4.xlsx", 1, header = T)
@@ -192,6 +199,7 @@ xdata
 colnames(xdata) = c("Bloki", 1, 2, 3, 4)
 xdata2 = xdata %>%
   slice(1:5)
+xdata2
 xdata3 = pivot_longer(xdata2, cols = 2:5, names_to = "Typy", values_to = "plon")
 xdata3
 
@@ -257,6 +265,7 @@ map = hash()
 map$Odmiany = unique(xdata3$Odmiany)
 map$Terminy = unique(xdata3$Terminy)
 map$Herbicydy = unique(xdata3$Herbicydy)
+map
 
 for (col in colnames(xdata3)[1:3])
 {
@@ -297,4 +306,4 @@ bartlett.test(xdata3$Plony, xdata3$Terminy)
 
 summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+factor(xdata3$Terminy)))
 
-# pvalue wieksze od 0.05 w kazdym przypadku, zatem przyjmujemy hipoteze zerowa, zatem srednie ilosci plonow sie nie roznia pod wplywem zadnego czynniku
+# pvalue wieksze od 0.05 w kazdym przypadku, zatem przyjmujemy hipoteze zerowa, zatem srednie ilosci plonow sie nie roznia pod wplywem zadnego czynnika

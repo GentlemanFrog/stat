@@ -1,4 +1,6 @@
 #r5-zad1
+setwd("~/stat/stat05")
+
 m = c(15,20,25,30,35,50)
 c = c(15, 25, 30,35,45,50)
 cor.test(m, c, method = "pearson")
@@ -10,11 +12,13 @@ cor.test(m, c, method = "pearson")
 A = c(0.6, 0.2, 0.3, 0.7, 0.5, 0.8, 0.7, 0.4, 0.6, 0.8)
 B = c(1.5, 1.5, 1.1, 1.2, 1.4, 1.1, 1.6, 1.0, 1.9, 1.7)
 cor.test(A, B, method = "pearson")
+
 # wspolczynnik korelacji wynosi 0.2375 (slaba korelacja)
 # test pearsona wskazal pvalue wieksze niz 0.05, zatem przyjmujemy hipoteze zerowa i stwierdzamy, ze korelacja miedzy wydzielaniem sie obu substancji jest statysztycznie nieistotna
 
 #zad3
 apples = matrix(c(29,17,194,68), ncol=2)
+apples
 chisq.test(apples)
 
 # test chi-squared wskazal pvalue wieksze niz 0.01, zatem nie odrzucamy hipotezy zerowej i stwierdzamy, ze zmienne sa niezalezne
@@ -28,9 +32,10 @@ chisq.test(data)
 
 #zad5
 opinions = matrix(c(4,14,17,19,6,6,16,21,13,4), ncol = 2)
+opinions
 fisher.test(opinions)
 
-# test fishera wskazal pvalue wieksze od 0.05, zatem hipoteze zerowa i stwierdzamy, ze nie ma zaleznosci pomiedzy ocenami
+# test fishera wskazal pvalue wieksze od 0.05, zatem przyjmujemy hipoteze zerowa i stwierdzamy, ze nie ma zaleznosci pomiedzy ocenami
 
 #zad6
 ham = read.csv("z6.csv", sep = ",")
@@ -102,7 +107,12 @@ summary(reg)
 reg2 = lm(rape$Plon ~ rape$DlugoscLuszczyn + rape$ZawartoscTluszczu)
 summary(reg2)
 
+modelstep = step(reg)
+summary(modelstep)
+
 #zad-excel
+
+library(dplyr)
 
 x1 = c(10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5)
 y1 = c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68)
@@ -131,6 +141,12 @@ round(mean(z12$y3),2)
 round(mean(z12$x4),2)
 round(mean(z12$y4),2)
 
+# lub dplyr
+
+z12 %>%
+  summarise(across(everything(), mean)) %>%
+  round(., 2)
+
 #wariancja
 round(var(z12$x1),2)
 round(var(z12$y1),2)
@@ -143,6 +159,12 @@ round(var(z12$y3),2)
 
 round(var(z12$x4),2)
 round(var(z12$y4),2)
+
+# lub dplyr
+
+z12 %>%
+  summarise(across(everything(), var)) %>%
+  round(., 2)
 
 #wspolczynnik korelacji
 
@@ -162,6 +184,7 @@ lm(z12$y2~z12$x2)
 lm(z12$y3~z12$x3)
 
 lm(z12$y4~z12$x4)
+
 
 #wspolczynnik determinacji r^2
 
