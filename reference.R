@@ -1,5 +1,5 @@
 # Stat reference
-setwd("C:/Users/Alek/Desktop/stat")
+setwd("~/stat")
 
 
 # lab01: 07-10-2021; podstawowe operacje i statystyki, manipulacje wektrow -------------------------------------------------------
@@ -905,10 +905,126 @@ summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+facto
 # lab08: 09-12-2021; uogolnione modele liniowe (GLM) ------------------------
 
 
+# model poissona jest odpowiedni dla zliczen w przedziale czasu lub dla liczby zdarzen wystepujacych w danym czasie; wartosciami wyjscia sa liczby naturalne
+# model logistyczny:
+  # jest odpowiedni dla danych binarnych (0/1, cos jest/czegos nie ma) lub przeksztalcone inne typy danych do binarnych (dane kategoryczne lub ciagle)
+  # dane powinny podlegac rozkladowi dwumianowemu
+  # wartosci wyjsciowe sa statystycznie niezalezne
+  # nie jest wymagana jednosc wariancji
 
 
+#______________________________________________________
+library(tidyr)
+library(dplyr)
+library("xlsx")
+# Narysować krzywą logistyczną y=ex/(1+ex) dla x z przedziału od -10 do 10.
+
+curve(exp(x)/(1+exp(x)), -10, 10)
+
+
+#______________________________________________________
+#  Dla danych „nadciśnienie.xlsx” zbadać wpływ wieku oraz palenia dla poziom nadciśnienia
+
+xdata = read.xlsx("stat08/nadcisnienie.xlsx", 1, header = T)
+xdata
+rl = glm(xdata$nadcisnienie ~ xdata$wiek + xdata$palenie, family = "binomial")
+summary(rl)
+# 
+# dla obu grup pvalue jest wieksze od 0.05, zatem brak istotnego wplywu wieku oraz palenia na poziom nadcisnienia
+
+#______________________________________________________
+# . Dane: mtcars. 
+# A. Zbadać wpływ cechy „disp” i cechy „hp” na „mpg” wykorzystując model liniowy i uogólniony 
+# model liniowy z rozkładem gaussowskim
+# B. Zbadać wpływ „disp” i cechy „hp” na „am” stosując model logistyczny oraz model Poissona 
+
+#A
+mtcars
+model.lm = lm(mtcars$mpg ~ mtcars$disp + mtcars$hp)
+summary(model.lm)
+model.gauss = glm(mtcars$mpg ~ mtcars$disp + mtcars$hp, family = "gaussian")
+summary(model.gauss)
+# oba modele daja te same dopasowania, zatem dla disp jest obecny istotny wplyw na mpg, a dla hp nie istnieje istotny wplyw (pvalue powyzej 0.05)
+
+#B
+model.logit = glm(mtcars$am ~ mtcars$disp + mtcars$hp, family = "binomial")
+summary(model.logit)
+model.poiss = glm(mtcars$am ~ mtcars$disp + mtcars$hp, family = "poisson")
+summary(model.poiss)
+# oba modele daja rozne dopasowania:
+# - lepiej dopasowany jest model logistyczny, z AIC = 22 (model poissona ma AIC = 42)
+# - dla modelu logistycznego disp ma istotny wplyw na am, a hp nie wykazuje istotnego wplywu
+# - dla modelu poissona disp oraz hp maja istotny wplyw na am
+
+#______________________________________________________
+# . Dla danych days-students.txt:
+#   A. Przedstawić graficznie dane
+# B. Wyznaczyć modele: liniowy, logistyczny oraz Poissona. Wybrać „najlepszy
+
+tdata = read.table("stat08/days-students.txt", header = TRUE)[2:3]
+plot(tdata)
+model2.lm = glm(tdata$Students ~ tdata$Days, family = "gaussian")
+summary(model2.lm)
+model2.logit = glm(tdata$Students ~ tdata$Days, family = "binomial")
+summary(model2.logit)
+model2.poiss = glm(tdata$Students ~ tdata$Days, family = "poisson")
+summary(model2.poiss)
+# najlepszym modelem jest model poissona, poniewaz wykazuje najnizsza wartosc AIC = 393
+
+#______________________________________________________
+# . Dla danych PlantGrowth z pakietu datasets:
+#   A. Przedstawić graficznie dane
+# B. Wyznaczyć uogólniony model liniowy z rozkładem dwumianowym
+
+
+library(datasets)
+PlantGrowth
+#A
+plot(PlantGrowth)
+
+#B
+plant = PlantGrowth
+weight.factors = cut(PlantGrowth$weight, 2, labels=c(0, 1))
+plant$weight2 = weight.factors
+plant
+model = glm(plant$weight2 ~ plant$group, family = "binomial")
+summary(model)
+
+#______________________________________________________
+# A. Wykonać wykres punktowy, gdzie OX - poziom ck, oś OY - prawdopodobieństwo ataku serca.
+# B. Wyznaczyć model liniowej regresji logistycznej z rozkładem dwumianowym. 
+# C. Wyświetlić informacje o tym modelu oraz zsumaryzowane informacje
+# D. Wyznaczyć model kwadratowej regresji logistycznej z rozkładem dwumianowym. 
+# E. Wyświetlić informacje o tym modelu oraz zsumaryzowane informacje
+# F. Ocenić, który model jest „lepszy”
+# G. Wykonać rysunek zawierający wykres punktowy danych
+
+data = data.frame("ck" = c(20, 60, 100, 140, 180, 220, 260, 300, 340, 380, 420, 460),
+                  "ha" = c(2,13,30,30,21,19,18,13,19,15,7,8),
+                  "ok" = c(88,26,8,5,0,1,1,1,1,0,0,0))
+#A
+plot(data$ck, data$ha/(data$ha + data$ok), ylab = "Prob of heart attack")
+#B                                                                                                                                                                                                               
+model.logit = glm(cbind(data$ha, data$ok) ~ data$ck, family = "binomial")
+#C
+summary(model.logit)
+# AIC 62.334
+#D
+model.logitsq = glm(cbind(data$ha, data$ok) ~ data$ck + I(data$ck^2), family = "binomial")
+#E
+summary(model.logitsq)
+# AIC 42.815
+#F
+#lepszym modelem jest model kwadratowej regresji logistycznej z rozkladem dwumianowym (42.815<62.334)
+#G
+dev.off()
+plot(data$ck, data$ha / (data$ha + data$ok), ylab = "Prob o heart attack")
+lines(data$ck, model.logit$fitted.values, col = "cyan")
+lines(data$ck, model.logitsq$fitted.values, lty= 69, col = "magenta")
+legend("bottomright", c("Binomial", "Binomial Squared"), col=c("cyan", "magenta"), lty=c(1, 69))
 
 # lab09: 16-12-2021; PCA --------------------------------------------------
+
 # lab10: 13-01-2022; Klaster ---------------------------------------------
 # lab11: 20-01-2022; Manova -----------------------------------------------
 
