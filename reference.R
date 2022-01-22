@@ -1,5 +1,6 @@
 # Stat reference
-setwd("~/stat")
+setwd("D:/GithubDesktop_repa/Stata/stat")
+
 
 # lab01: 07-10-2021; podstawowe operacje i statystyki, manipulacje wektrow -------------------------------------------------------
 
@@ -903,6 +904,13 @@ summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+facto
 
 # lab08: 09-12-2021; uogolnione modele liniowe (GLM) ------------------------
 
+
+
+
+
+# lab09: 16.12-2021; PCA --------------------------------------------------
+# lab10: 13.01.2022; Klaster ---------------------------------------------
+# lab11: 20.01.2022; Manova -----------------------------------------------
 
 
 
