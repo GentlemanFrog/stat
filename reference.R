@@ -1,5 +1,5 @@
 # Stat reference
-setwd("D:/GithubDesktop_repa/Stata/stat")
+setwd("C:/Users/Alek/Desktop/stat")
 
 
 # lab01: 07-10-2021; podstawowe operacje i statystyki, manipulacje wektrow -------------------------------------------------------
@@ -908,9 +908,9 @@ summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+facto
 
 
 
-# lab09: 16.12-2021; PCA --------------------------------------------------
-# lab10: 13.01.2022; Klaster ---------------------------------------------
-# lab11: 20.01.2022; Manova -----------------------------------------------
+# lab09: 16-12-2021; PCA --------------------------------------------------
+# lab10: 13-01-2022; Klaster ---------------------------------------------
+# lab11: 20-01-2022; Manova -----------------------------------------------
 
 
 
