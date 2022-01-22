@@ -905,7 +905,12 @@ summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+facto
 # lab08: 09-12-2021; uogolnione modele liniowe (GLM) ------------------------
 
 
-
+# model poissona jest odpowiedni dla zliczen w przedziale czasu lub dla liczby zdarzen wystepujacych w danym czasie; wartosciami wyjscia sa liczby naturalne
+# model logistyczny:
+  # jest odpowiedni dla danych binarnych (0/1, cos jest/czegos nie ma) lub przeksztalcone inne typy danych do binarnych (dane kategoryczne lub ciagle)
+  # dane powinny podlegac rozkladowi dwumianowemu
+  # wartosci wyjsciowe sa statystycznie niezalezne
+  # nie jest wymagana jednosc wariancji
 
 
 # lab09: 16-12-2021; PCA --------------------------------------------------
