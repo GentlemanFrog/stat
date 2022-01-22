@@ -376,7 +376,7 @@ TukeyHSD(a_model)
 
 
 
-# lab05: 18-10-2021; korelacje i regresja liniowa -------------------------
+# lab05: 18-11-2021; korelacje i regresja liniowa -------------------------
 
 # korelacja wskazuje sile i kierunek zaleznosci pomiedzy dwoma cechami
 # korelacja moze byc ujemna (wraz ze wzrostem jednej cechy, druga maleje) i dodatnia (wraz ze wzrostem jednej, rosnie druga)
@@ -1025,7 +1025,264 @@ legend("bottomright", c("Binomial", "Binomial Squared"), col=c("cyan", "magenta"
 
 # lab09: 16-12-2021; PCA --------------------------------------------------
 
+# PCA redukuje wymiarowość danych wielowymiarowych do dwóch lub trzech składowych głównych, które mogą być wizualizowane graficznie, z minimalną utratą informacji.
+# PCA zakłada, że kierunki o największych wariancjach są najbardziej "ważne" (tj. najbardziej główne).
+# Technicznie rzecz biorąc, ilość wariancji zachowanej przez każdą główną składową jest mierzona tak zwaną wartością własną (eigenvalue).
+# osobno moga byc plotowane zmienne (cechy) oraz osobniki
+# informacje dla zmiennych i osobnikow sa plotowane razem na biplocie
+
+# eigenvalues:
+  # mierza ilosc zachowanej wariancji przez kazda skladowa glowna, czyli pokazuja stopien objasnianej wariancji
+  # wartosci eigenvalues sa duze dla pierwszej skladowej i mniejsze dla nastepnych
+
+# okrag korelacji:
+  # Zmienne skorelowane dodatnio są zgrupowane razem.
+  # Zmienne skorelowane ujemnie są umieszczone po przeciwnych stronach początku wykresu (przeciwne ćwiartki).
+  # Odległość między zmiennymi a początkiem mierzy jakość zmiennych na mapie czynnikowej. Zmienne, które są oddalone od początku, są dobrze reprezentowane na mapie czynnikowej.
+
+# jakosc reprezentacji:
+  # Jakość odwzorowania zmiennych na mapie współczynników nazywana jest cos2 (cosinus kwadratowy, współrzędne kwadratowe).
+  # Wysoki cos2 wskazuje na dobrą reprezentację zmiennej na składowej głównej. W tym przypadku zmienna jest umieszczona blisko obwodu koła korelacji.
+  # Niski cos2 wskazuje, że zmienna nie jest doskonale reprezentowana przez PC. W tym przypadku zmienna znajduje się blisko środka okręgu.
+  # Zmienne, które są zamknięte do środka wykresu są mniej ważne dla pierwszych składowych.
+
+# udzial zmiennych w skladowych glownych:
+  # Udział zmiennych w wyjaśnianiu zmienności w danej składowej głównej wyrażony jest w procentach.
+  # Zmienne, które są skorelowane z PC1 (tj. Dim.1) i PC2 (tj. Dim.2) są najważniejsze w wyjaśnianiu zmienności w zbiorze danych.
+  # Zmienne, które nie są skorelowane z żadnym PC lub są skorelowane z ostatnimi wymiarami są zmiennymi o niskim wkładzie i mogą być usunięte w celu uproszczenia ogólnej analizy.
+
+# biplot
+  # współrzędne jednostek i zmiennych nie są skonstruowane na tej samej przestrzeni. Dlatego w biplocie należy skupić się głównie na kierunku zmiennych, a nie na ich bezwzględnej pozycji na wykresie.
+  # osobnik, który znajduje się po tej samej stronie danej zmiennej ma wysoką wartość tej zmiennej;
+  # osobnik znajdujący się po przeciwnej stronie danej zmiennej ma niską wartość dla tej zmiennej.
+  # strzelki reprezentujace zmienne interpretuje sie tak, jak to bylo opisane przy okregu korelacji
+
+# oznaczenia w cwiczeniach:
+  # var - variables - zmienne
+  # ind - individuals - osobniki
+
+#______________________________________________________
+library("FactoMineR")
+library("factoextra")
+library(xlsx)
+library(tidyr)
+library(dplyr)
+
+#zad1
+
+data = read.xlsx("stat09/dziesiecioboj-1.xlsx", 1, header = TRUE)
+data
+row.names(data) = data$Athlets
+data = data[2:ncol(data)]
+typeof(data)
+data.pca <- PCA(data, graph = FALSE)
+fviz_eig(data.pca, addlabels = TRUE)
+fviz_pca_var(data.pca, repel = TRUE)
+
+#cos2-var
+fviz_pca_var(data.pca, repel = TRUE, col.var = "cos2", gradient.cols = c("red", "orange", "green"))
+fviz_cos2(data.pca, choice = "var")
+
+#contrib-var
+fviz_contrib(data.pca, choice = "var")
+fviz_pca_var(data.pca, repel = TRUE, col.var = "contrib", gradient.cols = c("red", "orange", "green"))
+
+fviz_pca_ind(data.pca, repel = TRUE)
+
+#cos2-ind
+fviz_cos2(data.pca, choice = "ind")
+fviz_pca_ind(data.pca, repel = TRUE, col.ind = "cos2", gradient.cols = c("red", "orange", "green"))
+
+#contrib-ind
+fviz_contrib(data.pca, choice = "ind")
+fviz_pca_ind(data.pca, repel = TRUE, col.ind = "contrib", gradient.cols = c("red", "orange", "green"))
+
+fviz_pca_biplot(data.pca, repel = T)
+
+
+#zad2
+
+# custom grouping
+
+data2 = read.table("stat09/eucarpia2.txt", header = TRUE)
+data3 = as.data.frame.matrix(data2)
+data3
+data2$kalusy = as.numeric(as.character(data2$kalusy))
+typeof(data2)
+#data3 = data3[2:4]
+data3
+#row.names(data2) = data2$pozywka
+
+d = data3[2:4] %>%
+  group_by(pozywka, genotyp) %>%
+  pivot_wider(names_from = genotyp, values_from=kalusy)%>%
+  unique()  #summary(across(DC:CL, ~ lapply(.x, mean)))
+
+d  
+#names = as.character(d$pozywka)
+d = as.data.frame(row.names = as.character(d$pozywka), lapply(d[2:ncol(d)], function(x) as.numeric(unlist(lapply(x, mean)))))
+#row.names(d) = names
+d
+
+# MC test
+#d.pca = PCA(d, graph = F)
+#factoextra::fviz_pca_biplot(d.pca, col.var = "cos2", gradient.cols = hcl.colors(2, "Warm"), addEllipses = T, repel = T)
+
+
+data2 = read.table("stat09/kalusy-PCA.txt", header = T)
+data2
+data2.pca <- PCA(data2, graph = FALSE)
+fviz_eig(data2.pca, addlabels = TRUE)
+fviz_pca_var(data2.pca, repel = TRUE)
+
+#cos2-var
+fviz_pca_var(data2.pca, repel = TRUE, col.var = "cos2", gradient.cols = c("red", "orange", "green"))
+fviz_cos2(data2.pca, choice = "var")
+
+#contrib-var
+fviz_contrib(data2.pca, choice = "var")
+fviz_pca_var(data2.pca, repel = TRUE, col.var = "contrib", gradient.cols = c("red", "orange", "green"))
+
+fviz_pca_ind(data2.pca, repel = TRUE)
+
+#cos2-ind
+fviz_cos2(data2.pca, choice = "ind")
+fviz_pca_ind(data2.pca, repel = TRUE, col.ind = "cos2", gradient.cols = c("red", "orange", "green"))
+
+#contrib-ind
+fviz_contrib(data2.pca, choice = "ind")
+fviz_pca_ind(data2.pca, repel = TRUE, col.ind = "contrib", gradient.cols = c("red", "orange", "green"))
+
+fviz_pca_biplot(data2.pca)
+
+#zad3
+data3.pca <- PCA(iris[-5], graph = FALSE)
+fviz_eig(data3.pca, addlabels = TRUE)
+fviz_pca_var(data3.pca, repel = TRUE)
+
+#cos2-var
+fviz_pca_var(data3.pca, repel = TRUE, col.var = "cos2", gradient.cols = c("red", "orange", "green"))
+fviz_cos2(data3.pca, choice = "var")
+
+#contrib-var
+fviz_contrib(data3.pca, choice = "var")
+fviz_pca_var(data3.pca, repel = TRUE, col.var = "contrib", gradient.cols = c("red", "orange", "green"))
+
+fviz_pca_ind(data3.pca, repel = TRUE, col.ind = iris$Species, geom.ind = "point")
+
+#cos2-ind
+fviz_cos2(data3.pca, choice = "ind")
+fviz_pca_ind(data3.pca, repel = TRUE, col.ind = "cos2", gradient.cols = c("red", "orange", "green"), geom.ind = "point")
+
+#contrib-ind
+fviz_contrib(data3.pca, choice = "ind")
+fviz_pca_ind(data3.pca, repel = TRUE, col.ind = "contrib", gradient.cols = c("red", "orange", "green"), geom.ind = "point")
+
+fviz_pca_biplot(data3.pca, col.ind = iris$Species, repel = T, label="var", legend.title = "Species")
+
+
 # lab10: 13-01-2022; Klaster ---------------------------------------------
+
+# etapy grupowania hierarchicznego
+  # 1. wczytanie danych
+  # 2. usuwanie wierszy z NA 
+  # 3. satbdaryzacja danych
+  # 4. wyznaczenie macierzy odleglosci dla wczytanych dnaych (dist, vegdist) z uzyciem konkretnej miary
+  # 5. wykonanie grupownaia (hclust) z wykorzystaniem konkretnej metody wiazania
+  # 6. prezentacja w postaci dendrogramu
+
+# przykladowe miary odleglosci
+  # euclidean
+  # bray
+  # mahalanobis
+  # manhattan
+  # chao
+  # jaccard
+
+# metody wiazania
+  # single - metoda pojedynczego wiazania (najblizsze sasiedzwo) - miara niepodobienstwa miedzy 2 skupieniami okreslona jako najmniejsza miara niepodobienstwa dla 2 obiektow z roznych skupien
+  # complete - metoda pelnego wiazania (najdalsze sasiedztwo) - miara niepodobienstwa miedzy 2 skupieniami okreslona jako najwieksza miara niepodobienstwa dla 2 obiektow z roznych skupien
+  # average - metoda sredniego wiazania (srednie sasiedztwo) - miara niepodobienstwa miedzy 2 skupieniami okreslona jako srednia miara niepodobienstwa dla wszystkich obiektow z roznych skupien
+  # ward - metoda warda - miara niepodobienstwa miedzy 2 skupieniami okreslona jako suma kwadratow odchyllen wewnatrz skupien
+    
+
+#______________________________________________________
+# Dla danych „kalusy-PCA.xlsx” stosując pakiet „vegan” wykonać grupowanie 
+# hierarchiczne gatunków z odległością Braya i wykreślić dendogramy z „single”, „complete”, 
+# „average” , oraz „Ward”
+
+library(openxlsx)
+library(vegan)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+kalusy = read.table("stat10/kalusy-PCA.txt", header = T)
+kalusy
+
+kalusy.dist = vegdist(kalusy, method = "euclidean")
+kalusy.dist2 = vegdist(kalusy, method = "bray")
+
+cluster.single = hclust(kalusy.dist, method = "single")
+plot(cluster.single,
+     xlab = "complete method",
+     ylab = "length",
+     main = "Euclidean method",
+     sub = "")
+
+cluster.comp = hclust(kalusy.dist, method = "complete")
+plot(cluster.comp,
+     xlab = "complete method",
+     ylab = "length",
+     main = "Euclidean method",
+     sub = "")
+
+cluster.average = hclust(kalusy.dist, method = "average")
+plot(cluster.average,
+     xlab = "average method",
+     ylab = "length",
+     main = "Euclidean method",
+     sub = "")
+
+cluster.ward = hclust(kalusy.dist, method = "ward")
+plot(cluster.ward,
+     xlab = "ward method",
+     ylab = "length",
+     main = "Euclidean method",
+     sub = "")
+
+cluster.single2 = hclust(kalusy.dist2, 
+                         method = "single")
+plot(cluster.single2,
+     xlab = "single method",
+     ylab = "length",
+     main = "Bray method",
+     sub = "")
+
+cluster.comp2 = hclust(kalusy.dist2, method = "complete")
+plot(cluster.comp2,
+     xlab = "complete method",
+     ylab = "length",
+     main = "Bray method",
+     sub = "")
+
+cluster.average2 = hclust(kalusy.dist2, method = "average")
+plot(cluster.average2,
+     xlab = "average method",
+     ylab = "length",
+     main = "Bray method",
+     sub = "")
+
+cluster.ward2 = hclust(kalusy.dist2, method = "ward")
+plot(cluster.ward2,
+     xlab = "ward method",
+     ylab = "length",
+     main = "Bray method",
+     sub = "")
+
+#______________________________________________________
+# w pliku michalczyk_maciej_cluster.R sa te rozszerzone zadania z klastrowania (np. dendrogramy i kmeans)
+
 # lab11: 20-01-2022; Manova -----------------------------------------------
 
 
