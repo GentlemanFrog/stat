@@ -59,7 +59,8 @@ library(rpart.plot)
 model_tree = rpart(zaplodnienie ~ FA + HA + HT + ST + EST, data = jaja) 
 model_tree2 = rpart(niewyklute ~ FA + HA + HT + ST + EST, data = jaja) 
 summary(model_tree)
-rpart.plot(model_tree)
+rpart.plot(model_tree, box.palette = "RdYlGn") # plot drzewa
 summary(model_tree2)
-rpart.plot(model_tree2)
+rpart.plot(model_tree2, box.palette = "RdYlGn")
+rpart.rules(model_tree2) # plot zasad do decyzji
 
