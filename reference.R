@@ -289,66 +289,66 @@ vines %>%
   # 7. Ewentualne testy post-hoc (tylko wtedy jak pvalue < 0.05)
 
 #______________________________________________________
-# dany jest ciężar w gramach 1000 nasion dla dwóch rodów seradeli, Czy różnica w średnim ciężarze tych rodów jest istotna?
+# dany jest ciezar w gramach 1000 nasion dla dwoch rodow seradeli, Czy roznica w srednim ciezarze tych rodow jest istotna?
 
 rody = read.csv("stat04/zad1.csv", sep=",")
 
-## test zgodnoĹ›ci z rozkladem normalnym ###
+## test zgodnosci z rozkladem normalnym ###
 shapiro.test(rody$Rod.A)
 shapiro.test(rody$Rod.B)
-## prĂłby sa zgodne z rozkĹ‚adem normalnym i prĂłby sÄ… niezaleĹĽne
+## proby sa zgodne z rozkladem normalnym i proby sa niezalezne
 
-## test rĂłwnosci wariancji
+## test rownosci wariancji
 var.test(rody$Rod.A, rody$Rod.B)
-## prĂłby maja rowne wairancje
+## proby maja rowne wairancje
 
-## ukĹ‚ad hipotez
-#H0: Ĺ›redni ciezar A = sredni ciezar B
+## uklad hipotez
+#H0: sredni ciezar A = sredni ciezar B
 #H1: sr ciezar A != sr ciezar B
 
 t.test(rody$Rod.A, rody$Rod.B, var.equal = T) # var.equal = T, bo rowne wariancje
-# pvalue jestm nniejsze od 0.05, zatem moĹĽna odrzuciÄ‡ hipotezÄ™ zerowÄ… i przyjac alternatywna, co oznacza, ĹĽe roznica w cizarach pomiedzy rodami jest istotna
+# pvalue jestm nniejsze od 0.05, zatem mozna odrzucic hipoteze zerowa i przyjac alternatywna, co oznacza, ze roznica w cizarach pomiedzy rodami jest istotna
 
 #______________________________________________________
-# Oznaczono procent tłuszczu w 18 próbkach mleka za pomocą dwóch metod: metody Gerbera (metoda G) i metody Burata (metoda B).Czy metody te dają takie same wyniki?
+# Oznaczono procent tluszczu w 18 probkach mleka za pomoca dwoch metod: metody Gerbera (metoda G) i metody Burata (metoda B).Czy metody te daja takie same wyniki?
 
 methods = read.csv("stat04/zad2.csv", sep = ",")
 
-## test zgodnoĹ›ci z rozkladem normalnym ###
+## test zgodnosci z rozkladem normalnym ###
 shapiro.test(methods$MetodaG)
 shapiro.test(methods$B)
-## prĂłby sa zgodne z rozkĹ‚adem normalnym i proby sa zaleĹĽne
+## proby sa zgodne z rozkladem normalnym i proby sa zalezne
 
-##ukĹ‚ad hipotez
-#H0: Ĺ›rednia wynikow metody G = srednia wynikow metody B
-#H1: Ĺ›rednia wynikow metody G != srednia wynikow metody B
+## uklad hipotez
+#H0: srednia wynikow metody G = srednia wynikow metody B
+#H1: srednia wynikow metody G != srednia wynikow metody B
 
 t.test(methods$MetodaG, methods$B, paired = T)
 ## pvalue jest mniejsze od 0.05, zatem mozna odrzucic hipoteze zerowa i przyjac alternatywna, co oznacza, ze metody daja rozne wyniki
 
 #______________________________________________________
-#Na pierwszym roku studiów przebadano 5 studentów oraz 4 studentki pod względem zdolności matematycznych w celu weryfikacji przypuszczenia, że studenci są pod tym względem 
-#lepsi od studentek. Wyniki testu są następujące :
+#Na pierwszym roku studiow przebadano 5 studentow oraz 4 studentki pod wzgledem zdolnosci matematycznych w celu weryfikacji przypuszczenia, ze studenci sa pod tym wzgledem 
+#lepsi od studentek. Wyniki testu sa nastepujace :
 
 students = read.csv("stat04/zad5.csv")
-## test wilcoxona, poniewaĹĽ sÄ… to wartoĹ›ci ocen, ktore nie sÄ… wyliczalne
+## test wilcoxona, poniewaz sa to wartosci ocen, ktore nie sa wyliczalne
 
 ##uklad hipotez
 #H0: wynikki studentow = wyniki studentek
 #H1: wyniki studentow > wynikow studentek
 wilcox.test(students$studenci, students$studentki, alternative = "greater")
-# pvalue jest wieksze od 0.05, zatem nie map podstaw do odrzucenia hipotezy zerowej i przyjmuje hipoteze zerowa, zatem wyniki studentow sÄ… takie same jak studente
+# pvalue jest wieksze od 0.05, zatem nie map podstaw do odrzucenia hipotezy zerowej i przyjmuje hipoteze zerowa, zatem wyniki studentow sa takie same jak studentek
 
 #______________________________________________________
-# Porównano długości kłosów czterech odmian uprawnych D, A, J i N pewnej trawy. Uzyskano 
-# następujące obserwacje (w cm): Dokonać szczegółowych porównań odmian.
+# Porownano dlugşci klosow‚w czterech odmian uprawnych D, A, J i N pewnej trawy. Uzyskano 
+# nastepujace obserwacje (w cm): Dokonac szczegolowych porownan odmian.
 
 grass = read.csv("stat04/zad7.csv")
 ## test rownosci wariancji
 bartlett.test(grass)
 ## proby maja rowne wariancje
 
-## test zgodnoĹ›ci z rozkladem normalnym ###
+## test zgodnosci z rozkladem normalnym ###
 shapiro.test(grass$D)
 shapiro.test(grass$A)
 shapiro.test(grass$J)
@@ -357,7 +357,7 @@ shapiro.test(grass$N)
 shapiro_results = lapply(grass, function(x){shapiro.test(x)$p.value})
 all(shapiro_results > 0.05)
 
-## prĂłby sa zgodne z rozkĹ‚adem normalnym i proby sa niezaleĹĽne
+## proby sa zgodne z rozkladem normalnym i proby sa niezalezne
 
 ##uklad hipotez
 #H0: dl klosow D = dl klosow A = dl klosow J = dl klosow N 
@@ -408,10 +408,11 @@ TukeyHSD(a_model)
   # krokowa regresja wsteczna:
     # moze sie okazac, ze mozliwa jest redukcja wielokrotnosci regresji, gdy dla testu statystycznego regresji wielokrotnej 
       #ktorys z elementow nie bedzie statystycznie istotny - wtedy mozna przerpowadzic regresje na mniejszej ilosci cech (moze to zmniejszyc dopasowanie - generalnie tego na cw nie robilismy)
+      # regresja wteczna po bozemu - funkcja step()
 
 #______________________________________________________
-# W pewnym doświadczeniu farmakologicznym bada się korelację pomiędzy wydzielaniem się dwóch substancji A i B. 
-# Uzyskano następujące obserwacje (w mg/kg wagi): Na podstawie powyższej próby oszacować i przetestować współczynnik korelacji między wydzielaniem się obu substancji.
+# W pewnym doÄąâ€şwiadczeniu farmakologicznym bada siĂ„â„˘ korelacjĂ„â„˘ pomiĂ„â„˘dzy wydzielaniem siĂ„â„˘ dwÄ‚Ĺ‚ch substancji A i B. 
+# Uzyskano nastĂ„â„˘pujĂ„â€¦ce obserwacje (w mg/kg wagi): Na podstawie powyÄąÄ˝szej prÄ‚Ĺ‚by oszacowaĂ„â€ˇ i przetestowaĂ„â€ˇ wspÄ‚Ĺ‚Äąâ€šczynnik korelacji miĂ„â„˘dzy wydzielaniem siĂ„â„˘ obu substancji.
 
 A = c(0.6, 0.2, 0.3, 0.7, 0.5, 0.8, 0.7, 0.4, 0.6, 0.8)
 B = c(1.5, 1.5, 1.1, 1.2, 1.4, 1.1, 1.6, 1.0, 1.9, 1.7)
@@ -421,10 +422,10 @@ cor.test(A, B, method = "pearson")
 # test pearsona wskazal pvalue wieksze niz 0.05, zatem przyjmujemy hipoteze zerowa i stwierdzamy, ze korelacja miedzy wydzielaniem sie obu substancji jest statysztycznie nieistotna
 
 #______________________________________________________
-#Podczas badania jakości jabłek oceniano owoce ze względu na uszkodzenia spowodowane przez owocówkę 
-#jabłkóweczkę (U – owoce uszkodzone, N – owoce nieuszkodzone) oraz porażenie parchem jabłoniowym (C – owoce czyste, 
-#P – owoce z plamami). W wyniku klasyfikacji owoców uzyskano następujące liczebności
-#Czy na poziomie istotności 0,01 można uznać, że badane zmienne są niezależne?
+#Podczas badania jakoÄąâ€şci jabÄąâ€šek oceniano owoce ze wzglĂ„â„˘du na uszkodzenia spowodowane przez owocÄ‚Ĺ‚wkĂ„â„˘ 
+#jabÄąâ€škÄ‚Ĺ‚weczkĂ„â„˘ (U Ă˘â‚¬â€ś owoce uszkodzone, N Ă˘â‚¬â€ś owoce nieuszkodzone) oraz poraÄąÄ˝enie parchem jabÄąâ€šoniowym (C Ă˘â‚¬â€ś owoce czyste, 
+#P Ă˘â‚¬â€ś owoce z plamami). W wyniku klasyfikacji owocÄ‚Ĺ‚w uzyskano nastĂ„â„˘pujĂ„â€¦ce liczebnoÄąâ€şci
+#Czy na poziomie istotnoÄąâ€şci 0,01 moÄąÄ˝na uznaĂ„â€ˇ, ÄąÄ˝e badane zmienne sĂ„â€¦ niezaleÄąÄ˝ne?
 
 apples = matrix(c(29,17,194,68), ncol=2)
 apples
@@ -433,9 +434,9 @@ chisq.test(apples)
 # test chi-squared wskazal pvalue wieksze niz 0.01, zatem nie odrzucamy hipotezy zerowej i stwierdzamy, ze zmienne sa niezalezne
 
 #______________________________________________________
-# Opinie konsumentów dotyczące dwóch gatunków kawy na podstawie badań sondażowych. Każdy z sześćdziesięciu 
-#konsumentów oceniał każdą z dwóch kaw w skali punktowej. Uzyskano następujące wyniki:
-#Czy istniej zależność między ocenami obu kaw?
+# Opinie konsumentÄ‚Ĺ‚w dotyczĂ„â€¦ce dwÄ‚Ĺ‚ch gatunkÄ‚Ĺ‚w kawy na podstawie badaÄąâ€ž sondaÄąÄ˝owych. KaÄąÄ˝dy z szeÄąâ€şĂ„â€ˇdziesiĂ„â„˘ciu 
+#konsumentÄ‚Ĺ‚w oceniaÄąâ€š kaÄąÄ˝dĂ„â€¦ z dwÄ‚Ĺ‚ch kaw w skali punktowej. Uzyskano nastĂ„â„˘pujĂ„â€¦ce wyniki:
+#Czy istniej zaleÄąÄ˝noÄąâ€şĂ„â€ˇ miĂ„â„˘dzy ocenami obu kaw?
 
 opinions = matrix(c(4,14,17,19,6,6,16,21,13,4), ncol = 2)
 opinions
@@ -444,10 +445,10 @@ fisher.test(opinions)
 # test fishera wskazal pvalue wieksze od 0.05, zatem przyjmujemy hipoteze zerowa i stwierdzamy, ze nie ma zaleznosci pomiedzy ocenami
 
 #______________________________________________________
-# W badaniach nad szybkością oddawania wody przez wędlinę typu serwolatka poszukiwano związku między liczbą dni 
-# przechowywania a zawartością wody w wędlinie (w %). Wyniki przedstawia tabela
-# Wyznaczyć regresję liniową procentowej zawartości wody w wędlinie względem liczby dni przechowywania.
-# Obliczyć i przetestować współczynnik korelacji między zawartością wody w wędlinie a liczbą dni przechowywania.
+# W badaniach nad szybkoÄąâ€şciĂ„â€¦ oddawania wody przez wĂ„â„˘dlinĂ„â„˘ typu serwolatka poszukiwano zwiĂ„â€¦zku miĂ„â„˘dzy liczbĂ„â€¦ dni 
+# przechowywania a zawartoÄąâ€şciĂ„â€¦ wody w wĂ„â„˘dlinie (w %). Wyniki przedstawia tabela
+# WyznaczyĂ„â€ˇ regresjĂ„â„˘ liniowĂ„â€¦ procentowej zawartoÄąâ€şci wody w wĂ„â„˘dlinie wzglĂ„â„˘dem liczby dni przechowywania.
+# ObliczyĂ„â€ˇ i przetestowaĂ„â€ˇ wspÄ‚Ĺ‚Äąâ€šczynnik korelacji miĂ„â„˘dzy zawartoÄąâ€şciĂ„â€¦ wody w wĂ„â„˘dlinie a liczbĂ„â€¦ dni przechowywania.
 
 ham = read.csv("stat05/z6.csv", sep = ",")
 reg = lm(ham$zw ~ ham$LDP)
@@ -464,9 +465,9 @@ cor.test(ham$zw, ham$LDP, method = "pearson")
 # test pearsona wskazal pvalue mniejsze niz 0.05, zatem odrzucamy hipoteze zerowa i stwierdzamy, ze korelacja miedzy zawartoscia wody w wedlinie a liczba dni przechowywania jest statysztycznie istotna
 
 #______________________________________________________
-#  Badano cztery cechy rzepaku ozimego: plon, długość łuszczyn, zawartość tłuszczu i sumę glukozynolanów.
-# Uzyskano następujące wyniki:
-# Znaleźć równanie regresji wielokrotnej liniowej, określającej zależność plonu od: długości łuszczyn, zawartości tłuszczu i sumy glukozynolanów.
+#  Badano cztery cechy rzepaku ozimego: plon, dÄąâ€šugoÄąâ€şĂ„â€ˇ Äąâ€šuszczyn, zawartoÄąâ€şĂ„â€ˇ tÄąâ€šuszczu i sumĂ„â„˘ glukozynolanÄ‚Ĺ‚w.
+# Uzyskano nastĂ„â„˘pujĂ„â€¦ce wyniki:
+# ZnaleÄąĹźĂ„â€ˇ rÄ‚Ĺ‚wnanie regresji wielokrotnej liniowej, okreÄąâ€şlajĂ„â€¦cej zaleÄąÄ˝noÄąâ€şĂ„â€ˇ plonu od: dÄąâ€šugoÄąâ€şci Äąâ€šuszczyn, zawartoÄąâ€şci tÄąâ€šuszczu i sumy glukozynolanÄ‚Ĺ‚w.
 
 rape = read.csv("stat05/z11.csv", sep = ",")
 reg = lm(rape$Plon ~ rape$DlugoscLuszczyn + rape$ZawartoscTluszczu + rape$SumaGlukozynolanow)
@@ -506,16 +507,17 @@ library(dplyr)
 
 
 #______________________________________________________
-#  Niech dany będzie model postaci v = (Vmax * [S]) / (Km + [S])
-# Niech będą dane wyniki postaci:
-# Zastosować:
+#  Niech dany bĂ„â„˘dzie model postaci v = (Vmax * [S]) / (Km + [S])
+# Niech bĂ„â„˘dĂ„â€¦ dane wyniki postaci:
+# ZastosowaĂ„â€ˇ:
 #1. dwuparametryczny model Michaelisa Mentena z pakietu drc
-#2. funkcję nls.
-#Przedstawić otrzymane wyniki oraz wykonać odpowiednie rysunki.
+#2. funkcjĂ„â„˘ nls.
+#PrzedstawiĂ„â€ˇ otrzymane wyniki oraz wykonaĂ„â€ˇ odpowiednie rysunki.
 
 curves = read.csv("stat06/krzywe.csv", sep=",")
 curves.mm = drm(v ~ S, data=curves, fct=MM.2())
 summary(curves.mm)
+p = predict(curves.mm)
 plot(curves)
 lines(sort(curves$S), sort(predict(curves.mm)))
 
@@ -524,11 +526,11 @@ summary(curves.nls)
 plot(curves)
 #sortownaie tutaj
 lines(sort(curves$S), sort(predict(curves.nls)))
-
+#ggplot(curves, aes(S, v)) + geom_point() + geom_smooth(aes(S, predict(curves.mm)), color = "red", cex = .5)
 
 #______________________________________________________
-# Dla danych „dataset1.txt” i „dataset2.txt” dopasować różne funkcje z pakietu drc (np.
-# wykładniczy, Gompertza, logistyczny, log-logistyczny i Weibulla).
+# Dla danych Ă˘â‚¬Ĺľdataset1.txtĂ˘â‚¬ĹĄ i Ă˘â‚¬Ĺľdataset2.txtĂ˘â‚¬ĹĄ dopasowaĂ„â€ˇ rÄ‚Ĺ‚ÄąÄ˝ne funkcje z pakietu drc (np.
+# wykÄąâ€šadniczy, Gompertza, logistyczny, log-logistyczny i Weibulla).
 
 d1 = read.csv("stat06/dataset1.csv", sep = ",")
 d2 = read.csv("stat06/dataset2.csv", sep=",")
@@ -605,6 +607,14 @@ terminy = c(rep(1,8), rep(2,8), rep(3,8), rep(4,8))
 
 data = data.frame(plon, terminy, powtorzenia)
 data
+
+# ___przykladowe utworzenie danych programistycznie (po bozemu)
+test = data.frame("I" = c(290, 286, 266, 270, 301, 270, 264, 277),
+                  "II" = c(445, 450, 413, 448, 454, 442, 430, 438),
+                  "III" = c(520, 470, 516, 530, 475, 508, 485, 480),
+                  "IV" = c(370, 405, 412, 403, 384, 410, 415, 377),
+                  "powtorzenia" = c(1, 2, 3, 4, 5, 6, 7, 8))
+test_long = pivot_longer(test, 1:4, names_to = "terminy", values_to = "plon") %>% as.data.frame()
 
 # test normalnosci
 shapiro.test(plon1)
@@ -705,7 +715,7 @@ library(tidyr)
 library(dplyr)
 library("xlsx")
 
-xdata = read.xlsx("zad3_2.xlsx", 1, header = T)
+xdata = read.xlsx("stat07/zad3_2.xlsx", 1, header = T)
 xdata
 colnames(xdata) = c("Siew", 0, 0, 40, 40, 80, 80, 120, 120)
 xdata
@@ -725,7 +735,6 @@ xdata2
 # data3 <- data.frame(plon, odmiany, dawki)
 # 
 # data3
-
 p1 = xdata2 %>%
   filter(nawozenia == 0)
 shapiro.test(p1$plony)
@@ -768,11 +777,11 @@ bartlett.test(xdata2$plony, xdata2$Siew)
 
 # analiza wariancji ANOVA
 # uklad hipotez
-# H0_nawozenie: nawoĹĽenie nie wpĹ‚ywa na Ĺ›rednie plony masy zielonej.
+# H0_nawozenie: nawoĂ„Ä…Ă„Ëťenie nie wpĂ„Ä…Ă˘â‚¬Ĺˇywa na Ă„Ä…Ă˘â‚¬Ĺźrednie plony masy zielonej.
 # H1_nawozenie: ~H0_nawozenie
-# H0_siew: sposoby siewu nie wpĹ‚ywajÄ… na Ĺ›rednie plony masy zielonej
+# H0_siew: sposoby siewu nie wpĂ„Ä…Ă˘â‚¬ĹˇywajÄ‚â€žĂ˘â‚¬Â¦ na Ă„Ä…Ă˘â‚¬Ĺźrednie plony masy zielonej
 # H1_siew: ~H0_siew
-# H0_NxS: interakcja nawoĹĽeĹ„ ze sposobami siewu jest nieistotna
+# H0_NxS: interakcja nawoĂ„Ä…Ă„ËťeĂ„Ä…Ă˘â‚¬Ĺľ ze sposobami siewu jest nieistotna
 # H1_NxS: ~H0_NxS
 
 model = aov(xdata2$plony ~ factor(xdata2$nawozenia)*factor(xdata2$Siew))
@@ -783,11 +792,14 @@ summary(model)
 # w tym zadaniu opcjonalne
 t = TukeyHSD(model)
 t$`factor(xdata2$nawozenia)`
+plot(t)
 t$`factor(xdata2$Siew)`
+plot(t)
 t$`factor(xdata2$nawozenia):factor(xdata2$Siew)`
+plot(t)
 
 # zad4
-xdata = read.xlsx2("zad4.xlsx", 1, header = T)
+xdata = read.xlsx2("stat07/zad4.xlsx", 1, header = T)
 xdata
 colnames(xdata) = c("Bloki", 1, 2, 3, 4)
 xdata2 = xdata %>%
@@ -820,15 +832,15 @@ bartlett.test(as.numeric(xdata2$plon), xdata2$Typy)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
 
 ####
-# w teorii mamy sprawdzac tylko obiekty czyli typy uprawy, zatem bartlett plonĂłw z blokami teoretycznie nie jest potrzebny 
+# w teorii mamy sprawdzac tylko obiekty czyli typy uprawy, zatem bartlett plonĂ„â€šÄąâ€šw z blokami teoretycznie nie jest potrzebny 
 bartlett.test(as.numeric(xdata2$plon), xdata2$Bloki)
 # ppvalue powyzej 0.05, zatem noie podstawy do odrzucenia hipotezy zerowej, zatem uklad zalozenie o jednorodnosci wariancji jest spelnione
 ####
 
 
 # analiza wariancji ANOVA
-#UkĹ‚ad hipotez:
-#H0: Ĺ›rednie plonow dla typĂłw uprawy sa rowne
+#Uklad hipotez:
+#H0: srednie plonow dla typow uprawy sa rowne
 #H1: ~H0
 
 model = aov(as.numeric(xdata3$plon) ~ factor(xdata3$Typy)+factor(xdata3$Bloki))
@@ -836,14 +848,15 @@ summary(model)
 
 # pvalue mniejsze od 0.05 dla typu uprawy, zatem przyjmujemy hipoteze alternatywna ktora wskazuje na to, ze srednie plony nie sa rowne dla roznych typow uprawy
 
-TukeyHSD((model))
-plot(TukeyHSD(model))
+t = TukeyHSD((model))
+plot(t)
 
 # pod wzgledem blokow - sa one wszystkie statystycznie znaczaco nierowne
-# pod wzgledem typow uprawy - 2-1 oraz 3-1 sÄ… statystycznie znaczaco rozne
+# pod wzgledem typow uprawy - 2-1 oraz 3-1 sa statystycznie znaczaco rozne
 
 #zad5
-xdata = read.xlsx("zad5.xlsx", 1, header = T)
+library(hash)
+xdata = read.xlsx("stat07/zad5.xlsx", 1, header = T)
 xdata
 
 xdata2 = pivot_longer(xdata, cols = 2:6, names_to = "Terminy", values_to = "temp")
@@ -889,12 +902,12 @@ bartlett.test(xdata3$Plony, xdata3$Terminy)
 
 
 # analiza wariancji ANOVA
-#UkĹ‚ad hipotez:
-#H0_H:  Ĺ›rednie plony dla herbicydĂłw (obiektĂłw) sÄ… rĂłwne
+#UkĂ„Ä…Ă˘â‚¬Ĺˇad hipotez:
+#H0_H:  Ă„Ä…Ă˘â‚¬Ĺźrednie plony dla herbicydĂ„â€šÄąâ€šw (obiektĂ„â€šÄąâ€šw) sÄ‚â€žĂ˘â‚¬Â¦ rĂ„â€šÄąâ€šwne
 #H1_H: ~H0_H
-#H0_O: Ĺ›rednie plony dla odmian (wierszy) sÄ… rĂłwne
+#H0_O: Ă„Ä…Ă˘â‚¬Ĺźrednie plony dla odmian (wierszy) sÄ‚â€žĂ˘â‚¬Â¦ rĂ„â€šÄąâ€šwne
 #H1_O: ~H0_O
-#H0_T: Ĺ›rednie plony dla terminĂłw siewĂłw (kolumn) sÄ… rĂłwne
+#H0_T: Ă„Ä…Ă˘â‚¬Ĺźrednie plony dla terminĂ„â€šÄąâ€šw siewĂ„â€šÄąâ€šw (kolumn) sÄ‚â€žĂ˘â‚¬Â¦ rĂ„â€šÄąâ€šwne
 #H1_T: ~H0_T
 
 summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+factor(xdata3$Terminy)))
@@ -917,16 +930,19 @@ summary(aov(xdata3$Plony ~ factor(xdata3$Herbicydy)+factor(xdata3$Odmiany)+facto
 library(tidyr)
 library(dplyr)
 library("xlsx")
-# Narysować krzywą logistyczną y=ex/(1+ex) dla x z przedziału od -10 do 10.
+library(stats)
+# NarysowaĂ„â€ˇ krzywĂ„â€¦ logistycznĂ„â€¦ y=ex/(1+ex) dla x z przedziaÄąâ€šu od -10 do 10.
 
 curve(exp(x)/(1+exp(x)), -10, 10)
 
 
 #______________________________________________________
-#  Dla danych „nadciśnienie.xlsx” zbadać wpływ wieku oraz palenia dla poziom nadciśnienia
+#  Dla danych Ă˘â‚¬ĹľnadciÄąâ€şnienie.xlsxĂ˘â‚¬ĹĄ zbadaĂ„â€ˇ wpÄąâ€šyw wieku oraz palenia dla poziom nadciÄąâ€şnienia
 
 xdata = read.xlsx("stat08/nadcisnienie.xlsx", 1, header = T)
 xdata
+rl = glm(as.factor(xdata$nadcisnienie) ~ xdata$wiek + as.factor(xdata$palenie), family = "binomial")
+# lub
 rl = glm(xdata$nadcisnienie ~ xdata$wiek + xdata$palenie, family = "binomial")
 summary(rl)
 # 
@@ -934,9 +950,9 @@ summary(rl)
 
 #______________________________________________________
 # . Dane: mtcars. 
-# A. Zbadać wpływ cechy „disp” i cechy „hp” na „mpg” wykorzystując model liniowy i uogólniony 
-# model liniowy z rozkładem gaussowskim
-# B. Zbadać wpływ „disp” i cechy „hp” na „am” stosując model logistyczny oraz model Poissona 
+# A. ZbadaĂ„â€ˇ wpÄąâ€šyw cechy Ă˘â‚¬ĹľdispĂ˘â‚¬ĹĄ i cechy Ă˘â‚¬ĹľhpĂ˘â‚¬ĹĄ na Ă˘â‚¬ĹľmpgĂ˘â‚¬ĹĄ wykorzystujĂ„â€¦c model liniowy i uogÄ‚Ĺ‚lniony 
+# model liniowy z rozkÄąâ€šadem gaussowskim
+# B. ZbadaĂ„â€ˇ wpÄąâ€šyw Ă˘â‚¬ĹľdispĂ˘â‚¬ĹĄ i cechy Ă˘â‚¬ĹľhpĂ˘â‚¬ĹĄ na Ă˘â‚¬ĹľamĂ˘â‚¬ĹĄ stosujĂ„â€¦c model logistyczny oraz model Poissona 
 
 #A
 mtcars
@@ -958,8 +974,8 @@ summary(model.poiss)
 
 #______________________________________________________
 # . Dla danych days-students.txt:
-#   A. Przedstawić graficznie dane
-# B. Wyznaczyć modele: liniowy, logistyczny oraz Poissona. Wybrać „najlepszy
+#   A. PrzedstawiĂ„â€ˇ graficznie dane
+# B. WyznaczyĂ„â€ˇ modele: liniowy, logistyczny oraz Poissona. WybraĂ„â€ˇ Ă˘â‚¬Ĺľnajlepszy
 
 tdata = read.table("stat08/days-students.txt", header = TRUE)[2:3]
 plot(tdata)
@@ -973,8 +989,8 @@ summary(model2.poiss)
 
 #______________________________________________________
 # . Dla danych PlantGrowth z pakietu datasets:
-#   A. Przedstawić graficznie dane
-# B. Wyznaczyć uogólniony model liniowy z rozkładem dwumianowym
+#   A. PrzedstawiĂ„â€ˇ graficznie dane
+# B. WyznaczyĂ„â€ˇ uogÄ‚Ĺ‚lniony model liniowy z rozkÄąâ€šadem dwumianowym
 
 
 library(datasets)
@@ -991,13 +1007,13 @@ model = glm(plant$weight2 ~ plant$group, family = "binomial")
 summary(model)
 
 #______________________________________________________
-# A. Wykonać wykres punktowy, gdzie OX - poziom ck, oś OY - prawdopodobieństwo ataku serca.
-# B. Wyznaczyć model liniowej regresji logistycznej z rozkładem dwumianowym. 
-# C. Wyświetlić informacje o tym modelu oraz zsumaryzowane informacje
-# D. Wyznaczyć model kwadratowej regresji logistycznej z rozkładem dwumianowym. 
-# E. Wyświetlić informacje o tym modelu oraz zsumaryzowane informacje
-# F. Ocenić, który model jest „lepszy”
-# G. Wykonać rysunek zawierający wykres punktowy danych
+# A. WykonaĂ„â€ˇ wykres punktowy, gdzie OX - poziom ck, oÄąâ€ş OY - prawdopodobieÄąâ€žstwo ataku serca.
+# B. WyznaczyĂ„â€ˇ model liniowej regresji logistycznej z rozkÄąâ€šadem dwumianowym. 
+# C. WyÄąâ€şwietliĂ„â€ˇ informacje o tym modelu oraz zsumaryzowane informacje
+# D. WyznaczyĂ„â€ˇ model kwadratowej regresji logistycznej z rozkÄąâ€šadem dwumianowym. 
+# E. WyÄąâ€şwietliĂ„â€ˇ informacje o tym modelu oraz zsumaryzowane informacje
+# F. OceniĂ„â€ˇ, ktÄ‚Ĺ‚ry model jest Ă˘â‚¬ĹľlepszyĂ˘â‚¬ĹĄ
+# G. WykonaĂ„â€ˇ rysunek zawierajĂ„â€¦cy wykres punktowy danych
 
 data = data.frame("ck" = c(20, 60, 100, 140, 180, 220, 260, 300, 340, 380, 420, 460),
                   "ha" = c(2,13,30,30,21,19,18,13,19,15,7,8),
@@ -1008,7 +1024,7 @@ plot(data$ck, data$ha/(data$ha + data$ok), ylab = "Prob of heart attack")
 model.logit = glm(cbind(data$ha, data$ok) ~ data$ck, family = "binomial")
 #C
 summary(model.logit)
-# AIC 62.334
+  # AIC 62.334
 #D
 model.logitsq = glm(cbind(data$ha, data$ok) ~ data$ck + I(data$ck^2), family = "binomial")
 #E
@@ -1025,9 +1041,9 @@ legend("bottomright", c("Binomial", "Binomial Squared"), col=c("cyan", "magenta"
 
 # lab09: 16-12-2021; PCA --------------------------------------------------
 
-# PCA redukuje wymiarowość danych wielowymiarowych do dwóch lub trzech składowych głównych, które mogą być wizualizowane graficznie, z minimalną utratą informacji.
-# PCA zakłada, że kierunki o największych wariancjach są najbardziej "ważne" (tj. najbardziej główne).
-# Technicznie rzecz biorąc, ilość wariancji zachowanej przez każdą główną składową jest mierzona tak zwaną wartością własną (eigenvalue).
+# PCA redukuje wymiarowosc danych wielowymiarowych do dwoch lub trzech skladowych glownych, ktore moga byc wizualizowane graficznie, z minimalna utrata informacji.
+# PCA zaklada, ze kierunki o najwiekszych wariancjach sa najbardziej "wazne" (tj. najbardziej glowne).
+# Technicznie rzecz biorac, ilosc wariancji zachowanej przez kazda glowna skladowa jest mierzona tak zwana wartoscia wlasna (eigenvalue).
 # osobno moga byc plotowane zmienne (cechy) oraz osobniki
 # informacje dla zmiennych i osobnikow sa plotowane razem na biplocie
 
@@ -1036,25 +1052,25 @@ legend("bottomright", c("Binomial", "Binomial Squared"), col=c("cyan", "magenta"
   # wartosci eigenvalues sa duze dla pierwszej skladowej i mniejsze dla nastepnych
 
 # okrag korelacji:
-  # Zmienne skorelowane dodatnio są zgrupowane razem.
-  # Zmienne skorelowane ujemnie są umieszczone po przeciwnych stronach początku wykresu (przeciwne ćwiartki).
-  # Odległość między zmiennymi a początkiem mierzy jakość zmiennych na mapie czynnikowej. Zmienne, które są oddalone od początku, są dobrze reprezentowane na mapie czynnikowej.
+  # Zmienne skorelowane dodatnio sa zgrupowane razem.
+  # Zmienne skorelowane ujemnie sa umieszczone po przeciwnych stronach poczatku wykresu (przeciwne cwiartki).
+  # Odleglosci miedzy zmiennymi a poczatkiem mierzy jakosc zmiennych na mapie czynnikowej. Zmienne, ktore sa oddalone od poczatku ukladu, sa dobrze reprezentowane na mapie czynnikowej.
 
-# jakosc reprezentacji:
-  # Jakość odwzorowania zmiennych na mapie współczynników nazywana jest cos2 (cosinus kwadratowy, współrzędne kwadratowe).
-  # Wysoki cos2 wskazuje na dobrą reprezentację zmiennej na składowej głównej. W tym przypadku zmienna jest umieszczona blisko obwodu koła korelacji.
-  # Niski cos2 wskazuje, że zmienna nie jest doskonale reprezentowana przez PC. W tym przypadku zmienna znajduje się blisko środka okręgu.
-  # Zmienne, które są zamknięte do środka wykresu są mniej ważne dla pierwszych składowych.
+# jakosc reprezentacji (cos2):
+  # Jakosc odwzorowania zmiennych na mapie wspolczynnikow nazywana jest cos2 (cosinus kwadratowy, wspolrzedne kwadratowe).
+  # Wysoki cos2 wskazuje na dobra reprezentacje zmiennej na skladowej glownej. W tym przypadku zmienna jest umieszczona blisko obwodu kola korelacji.
+  # Niski cos2 wskazuje, ze zmienna nie jest doskonale reprezentowana przez PC. W tym przypadku zmienna znajduje sie blisko srodka okregu.
+  # Zmienne, ktore sa zamkniete do srodka wykresu sa mniej waze dla pierwszych skladowych.
 
-# udzial zmiennych w skladowych glownych:
-  # Udział zmiennych w wyjaśnianiu zmienności w danej składowej głównej wyrażony jest w procentach.
-  # Zmienne, które są skorelowane z PC1 (tj. Dim.1) i PC2 (tj. Dim.2) są najważniejsze w wyjaśnianiu zmienności w zbiorze danych.
-  # Zmienne, które nie są skorelowane z żadnym PC lub są skorelowane z ostatnimi wymiarami są zmiennymi o niskim wkładzie i mogą być usunięte w celu uproszczenia ogólnej analizy.
+# udzial zmiennych w skladowych glownych (contrib):
+  # Udzial zmiennych w wyjasnianiu zmiennosci w danej skladowej glownej wyrazony jest w procentach.
+  # Zmienne, ktore sa skorelowane z PC1 (tj. Dim.1) i PC2 (tj. Dim.2) sa najwazniejsze w wyjasnianiu zmiennosci w zbiorze danych.
+  # Zmienne, ktore nie sa skorelowane z zadnym PC lub sa skorelowane z ostatnimi wymiarami sa zmiennymi o niskim wkladzie i moga byc usuniete w celu uproszczenia ogolnej analizy.
 
 # biplot
-  # współrzędne jednostek i zmiennych nie są skonstruowane na tej samej przestrzeni. Dlatego w biplocie należy skupić się głównie na kierunku zmiennych, a nie na ich bezwzględnej pozycji na wykresie.
-  # osobnik, który znajduje się po tej samej stronie danej zmiennej ma wysoką wartość tej zmiennej;
-  # osobnik znajdujący się po przeciwnej stronie danej zmiennej ma niską wartość dla tej zmiennej.
+  # wspolrzedne jednostek i zmiennych nie sa skonstruowane na tej samej przestrzeni. Dlatego w biplocie nalezy skupiac sie glownie na kierunku zmiennych, a nie na ich bezwzglednej pozycji na wykresie.
+  # osobnik, ktory znajduje sie po tej samej stronie danej zmiennej ma wysoka wartosc tej zmiennej;
+  # osobnik znajdujacy sie po przeciwnej stronie danej zmiennej ma niska wartosc dla tej zmiennej.
   # strzelki reprezentujace zmienne interpretuje sie tak, jak to bylo opisane przy okregu korelacji
 
 # oznaczenia w cwiczeniach:
@@ -1154,6 +1170,7 @@ fviz_contrib(data2.pca, choice = "ind")
 fviz_pca_ind(data2.pca, repel = TRUE, col.ind = "contrib", gradient.cols = c("red", "orange", "green"))
 
 fviz_pca_biplot(data2.pca)
+fviz_pca_biplot(data2.pca, col.var = "cos2", gradient.cols = c("red", "orange", "green"), addEllipses = T, repel = T)
 
 #zad3
 data3.pca <- PCA(iris[-5], graph = FALSE)
@@ -1168,7 +1185,7 @@ fviz_cos2(data3.pca, choice = "var")
 fviz_contrib(data3.pca, choice = "var")
 fviz_pca_var(data3.pca, repel = TRUE, col.var = "contrib", gradient.cols = c("red", "orange", "green"))
 
-fviz_pca_ind(data3.pca, repel = TRUE, col.ind = iris$Species, geom.ind = "point")
+fviz_pca_ind(data3.pca, repel = TRUE, col.ind = iris$Species, geom.ind = "point", addEllipses = T)
 
 #cos2-ind
 fviz_cos2(data3.pca, choice = "ind")
@@ -1185,8 +1202,8 @@ fviz_pca_biplot(data3.pca, col.ind = iris$Species, repel = T, label="var", legen
 
 # etapy grupowania hierarchicznego
   # 1. wczytanie danych
-  # 2. usuwanie wierszy z NA 
-  # 3. satbdaryzacja danych
+  # 2. usuwanie wierszy z NA (na.omit())
+  # 3. standaryzacja danych
   # 4. wyznaczenie macierzy odleglosci dla wczytanych dnaych (dist, vegdist) z uzyciem konkretnej miary
   # 5. wykonanie grupownaia (hclust) z wykorzystaniem konkretnej metody wiazania
   # 6. prezentacja w postaci dendrogramu
@@ -1207,9 +1224,9 @@ fviz_pca_biplot(data3.pca, col.ind = iris$Species, repel = T, label="var", legen
     
 
 #______________________________________________________
-# Dla danych „kalusy-PCA.xlsx” stosując pakiet „vegan” wykonać grupowanie 
-# hierarchiczne gatunków z odległością Braya i wykreślić dendogramy z „single”, „complete”, 
-# „average” , oraz „Ward”
+# Dla danych Ă˘â‚¬Ĺľkalusy-PCA.xlsxĂ˘â‚¬ĹĄ stosujĂ„â€¦c pakiet Ă˘â‚¬ĹľveganĂ˘â‚¬ĹĄ wykonaĂ„â€ˇ grupowanie 
+# hierarchiczne gatunkÄ‚Ĺ‚w z odlegÄąâ€šoÄąâ€şciĂ„â€¦ Braya i wykreÄąâ€şliĂ„â€ˇ dendogramy z Ă˘â‚¬ĹľsingleĂ˘â‚¬ĹĄ, Ă˘â‚¬ĹľcompleteĂ˘â‚¬ĹĄ, 
+# Ă˘â‚¬ĹľaverageĂ˘â‚¬ĹĄ , oraz Ă˘â‚¬ĹľWardĂ˘â‚¬ĹĄ
 
 library(openxlsx)
 library(vegan)
@@ -1311,20 +1328,32 @@ plot(cluster.ward2,
 
 
 #______________________________________________________
-# Wykonać wielowymiarową analizę wariancji bez interakcji dla danych iris: osobno 
-# dla Sepal, Petal oraz łącznie dla Sepal i Petal stosując statystyki "Pillai", "Wilks", "HotellingLawley" oraz "Roy". Sprawdzić założenia (normalność, jednorodność, liniowość).
+# WykonaĂ„â€ˇ wielowymiarowĂ„â€¦ analizĂ„â„˘ wariancji bez interakcji dla danych iris: osobno 
+# dla Sepal, Petal oraz Äąâ€šĂ„â€¦cznie dla Sepal i Petal stosujĂ„â€¦c statystyki "Pillai", "Wilks", "HotellingLawley" oraz "Roy". SprawdziĂ„â€ˇ zaÄąâ€šoÄąÄ˝enia (normalnoÄąâ€şĂ„â€ˇ, jednorodnoÄąâ€şĂ„â€ˇ, liniowoÄąâ€şĂ„â€ˇ).
 
 library(mvnormtest)
 library(dplyr)
 library(rstatix)
 # zad1
-iris
+df = iris %>% group_by(Species)
+
+
 rstatix::mshapiro_test(iris %>% select(Sepal.Length, Sepal.Width))
 # pvalue wieksze od 0.05 zatem zmienne zalezne maja rozklad normalny
+
+# lub osobne dla grup i zmiennych - ale o tym nie wspominalismy
+iris %>%
+  group_by(Species) %>%
+  rstatix::shapiro_test(Sepal.Length, Sepal.Width) %>%
+  arrange(variable)
+
 bartlett.test(iris %>% select(Sepal.Length, Sepal.Width))
 # pvalue jest mniejsze od 0.05, zatem brak jest jednorodnosci wariancji
 cor.test(iris$Sepal.Length, iris$Sepal.Width)
 # pvalue testu pearsona dla korelacji jest wieksze od 0.05, zatem korelacje jest nieistotna statystycznie i korelacja jest ujemna
+# tutaj lepiej to ponizej robic - dla zmiennych w zaleznosci od grup
+iris %>% group_by(Species) %>% rstatix::cor_test(starts_with("Sepal"))
+
 model = manova(cbind(iris$Sepal.Length, iris$Sepal.Width) ~ iris$Species)
 summary(model, test = "Pillai")
 tests = c("Pillai", "Wilks", "Hotelling-Lawley", "Roy")
@@ -1349,9 +1378,9 @@ summary(model3, test = "Roy")
 
 
 #______________________________________________________
-# Dla danych metals.xlsx wykonać wielowymiarową analizę wariancji bez interakcji 
-# stosując statystyki "Pillai", "Wilks", "Hotelling-Lawley" oraz "Roy". Sprawdzić założenia
-# (normalność, jednorodność, liniowość).
+# Dla danych metals.xlsx wykonaĂ„â€ˇ wielowymiarowĂ„â€¦ analizĂ„â„˘ wariancji bez interakcji 
+# stosujĂ„â€¦c statystyki "Pillai", "Wilks", "Hotelling-Lawley" oraz "Roy". SprawdziĂ„â€ˇ zaÄąâ€šoÄąÄ˝enia
+# (normalnoÄąâ€şĂ„â€ˇ, jednorodnoÄąâ€şĂ„â€ˇ, liniowoÄąâ€şĂ„â€ˇ).
 
 #zad2
 library(openxlsx)
@@ -1374,13 +1403,13 @@ summary(model_metals, test = "Roy")
 # http://www.milbo.org/rpart-plot/prp.pdf
 
 #______________________________________________________
-#Zadanie 1. Dla danych „ jaja-tree.xlsx” zbudować drzewa decyzyjne, przedstawić otrzymane wyniki 
-# oraz wykonać rysunek tych drzew. Zastosować pakiety „rpart” oraz „rpart.plot”.
+#Zadanie 1. Dla danych Ă˘â‚¬Ĺľ jaja-tree.xlsxĂ˘â‚¬ĹĄ zbudowaĂ„â€ˇ drzewa decyzyjne, przedstawiĂ„â€ˇ otrzymane wyniki 
+# oraz wykonaĂ„â€ˇ rysunek tych drzew. ZastosowaĂ„â€ˇ pakiety Ă˘â‚¬ĹľrpartĂ˘â‚¬ĹĄ oraz Ă˘â‚¬Ĺľrpart.plotĂ˘â‚¬ĹĄ.
 # Dane: 
-#   zmienna zależna: 
+#   zmienna zaleÄąÄ˝na: 
 #   1. zaplodnienie
 # 2. niewyklute
-# zmienne niezależne: 
+# zmienne niezaleÄąÄ˝ne: 
 #   FA: gospodarstwo 
 # HA: wiek kury 
 # HT: typ klujnika 
@@ -1394,8 +1423,8 @@ jaja <- read.xlsx("stat11/jaja-tree.xlsx", sheet = 1)
 
 library(rpart)
 library(rpart.plot)
-model_tree = rpart(zaplodnienie ~ FA + HA + HT + ST + EST, data = jaja) 
-model_tree2 = rpart(niewyklute ~ FA + HA + HT + ST + EST, data = jaja) 
+model_tree = rpart(zaplodnienie ~ FA + HA + HT + ST + EST, data = jaja, method = "anova") 
+model_tree2 = rpart(niewyklute ~ FA + HA + HT + ST + EST, data = jaja, method = "anova") 
 summary(model_tree)
 rpart.plot(model_tree, box.palette = "RdYlGn") # plot drzewa
 summary(model_tree2)

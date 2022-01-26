@@ -37,7 +37,7 @@ summary(model.poiss)
 # ZAD4
 tdata = read.table("days-students.txt", header = TRUE)[2:3]
 plot(tdata)
-model2.lm = glm(tdata$Students ~ tdata$Days, family = "gaussian")
+model2.lm = glm(tdata$Students ~ tdata$Days, family = gaussian(link = "identity"))
 summary(model2.lm)
 model2.logit = glm(tdata$Students ~ tdata$Days, family = "binomial")
 summary(model2.logit)
