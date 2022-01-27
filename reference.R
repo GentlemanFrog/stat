@@ -1203,7 +1203,7 @@ fviz_pca_biplot(data3.pca, col.ind = iris$Species, repel = T, label="var", legen
 # etapy grupowania hierarchicznego
   # 1. wczytanie danych
   # 2. usuwanie wierszy z NA (na.omit())
-  # 3. standaryzacja danych
+  # 3. standaryzacja danych (scale())
   # 4. wyznaczenie macierzy odleglosci dla wczytanych dnaych (dist, vegdist) z uzyciem konkretnej miary
   # 5. wykonanie grupownaia (hclust) z wykorzystaniem konkretnej metody wiazania
   # 6. prezentacja w postaci dendrogramu
