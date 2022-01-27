@@ -147,6 +147,10 @@ z12 %>%
   summarise(across(everything(), mean)) %>%
   round(., 2)
 
+z12 %>%
+  summarise_all(mean) %>%
+  round(., 2)
+
 #wariancja
 round(var(z12$x1),2)
 round(var(z12$y1),2)
@@ -164,6 +168,10 @@ round(var(z12$y4),2)
 
 z12 %>%
   summarise(across(everything(), var)) %>%
+  round(., 2)
+
+z12 %>%
+  summarise_all(var) %>%
   round(., 2)
 
 #wspolczynnik korelacji
